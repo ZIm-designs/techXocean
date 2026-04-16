@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AuthContext } from './ClientApplication';
+import { AuthContext, CartContext } from './ClientApplication';
 import { FaDesktop, FaVideo } from 'react-icons/fa';
+import { MOCK_PRODUCTS } from '@/data/products';
 
 interface Category {
   id: number;
@@ -22,7 +23,24 @@ interface NavigationProps {
 
 export const MainHeader = ({ cartCount, compareCount, onMenuToggle }: { cartCount: number, compareCount: number, onMenuToggle: () => void }) => {
     const { userState, setUserState, showToast } = useContext(AuthContext);
+    const { setIsCartDrawerOpen } = useContext(CartContext);
     const router = useRouter();
+
+    const [searchQuery, setSearchQuery] = useState('');
+    const [showSearch, setShowSearch] = useState(false);
+    const searchRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+                setShowSearch(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const filteredProducts = MOCK_PRODUCTS.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 4);
 
     const handleLogout = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -54,9 +72,39 @@ export const MainHeader = ({ cartCount, compareCount, onMenuToggle }: { cartCoun
                         </picture>
                     </Link>
                 </div>
-                <div className="search-wrap">
-                    <input type="text" className="search-input" placeholder="Search for Products..." />
+                <div className="search-wrap" style={{position: 'relative'}} ref={searchRef}>
+                    <input type="text" className="search-input" placeholder="Search for Products..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} onFocus={() => setShowSearch(true)} />
                     <button className="search-btn"><i className="fas fa-search"></i></button>
+
+                    {showSearch && searchQuery.length > 0 && (
+                        <div className="search-autocomplete-dropdown" style={{position: 'absolute', top: '100%', left: 0, right: 0, background: 'white', borderRadius: '8px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)', zIndex: 2000, marginTop: '5px', overflow: 'hidden', border: '1px solid #eee'}}>
+                            {filteredProducts.length > 0 ? (
+                                <>
+                                    {filteredProducts.map(p => (
+                                        <Link key={p.id} href={`/product/${p.id}`} onClick={() => setShowSearch(false)} style={{display: 'flex', alignItems: 'center', padding: '10px 15px', borderBottom: '1px solid #f5f5f5', textDecoration: 'none', color: '#333'}}>
+                                            <div style={{width: '40px', height: '40px', background: '#f8f9fa', borderRadius: '4px', overflow: 'hidden', marginRight: '15px'}}>
+                                                <img src={p.imgUrl || '/images/placeholder.png'} alt={p.title} style={{width: '100%', height: '100%', objectFit: 'contain'}} />
+                                            </div>
+                                            <div style={{flex: 1}}>
+                                                <div style={{fontSize: '13px', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px'}}>{p.title}</div>
+                                                <div style={{fontSize: '11px', color: '#666'}}>
+                                                    {p.features?.[0]?.substring(0,30)}...
+                                                </div>
+                                            </div>
+                                            <div style={{fontSize: '14px', fontWeight: 800, color: '#ff6b00'}}>{p.price}</div>
+                                        </Link>
+                                    ))}
+                                    <div style={{padding: '12px', textAlign: 'center', background: '#f8f9fa', fontSize: '12px', fontWeight: 600, color: '#1B5B97', cursor: 'pointer'}}>
+                                        <i className="fas fa-search"></i> See all {searchQuery} results
+                                    </div>
+                                </>
+                            ) : (
+                                <div style={{padding: '20px', textAlign: 'center', color: '#888', fontSize: '13px'}}>
+                                    No products found matching "{searchQuery}"
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
                 <div className="header-actions">
                     <Link href="/" className="action-item">
@@ -138,7 +186,7 @@ export const MainHeader = ({ cartCount, compareCount, onMenuToggle }: { cartCoun
                             </div>
                         </Link>
                     )}
-                    <Link href="/cart" className="action-item cart-item">
+                    <a href="#" onClick={(e) => { e.preventDefault(); setIsCartDrawerOpen(true); }} className="action-item cart-item">
                         <div className="action-icon">
                             <i className="fas fa-shopping-bag"></i>
                             <span className="badge cart-badge">{cartCount}</span>
@@ -147,7 +195,7 @@ export const MainHeader = ({ cartCount, compareCount, onMenuToggle }: { cartCoun
                             <span className="text-top">Cart</span>
                             <span className="text-bottom">0৳</span>
                         </div>
-                    </Link>
+                    </a>
                 </div>
             </div>
         </header>

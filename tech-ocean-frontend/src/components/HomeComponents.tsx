@@ -21,11 +21,11 @@ export const HeroBanner = () => (
                 </div>
             </div>
             <div className="hero-side-banners">
-                <div className="side-banner" style={{background: 'var(--primary-color)'}}>
-                    <h3>Special Laptop Deals</h3>
+                <div className="side-banner" style={{background: 'linear-gradient(135deg, #1B5B97, #0d3d6b)', color: 'white'}}>
+                    <h3 style={{color: 'white'}}>Special Laptop Deals</h3>
                 </div>
-                <div className="side-banner" style={{background: 'var(--secondary-color)'}}>
-                    <h3>CCTV Build Offers</h3>
+                <div className="side-banner" style={{background: 'linear-gradient(135deg, #ff6b00, #e05a00)', color: 'white'}}>
+                    <h3 style={{color: 'white'}}>CCTV Build Offers</h3>
                 </div>
             </div>
         </div>

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Navigation from './Navigation';
 import Footer from './Footer';
 import { MOCK_CATEGORIES } from '@/data/categories';
@@ -62,9 +63,6 @@ export default function ClientApplication({ children }: ClientApplicationProps) 
                 ? prev.map(p => p.id === product.id ? { ...p, quantity: p.quantity + qty } : p)
                 : [...prev, { ...product, quantity: qty }];
             
-            if (forceCheckout) {
-               try { localStorage.setItem('techXocean_cart', JSON.stringify(nextList)); } catch {}
-            }
             return nextList;
         });
         
@@ -103,17 +101,103 @@ export default function ClientApplication({ children }: ClientApplicationProps) 
     const isInCompare  = (productId: any) => compareItems.some(p => p.id === productId);
 
     const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const subtotal = cartItems.reduce((sum, item) => sum + (parseFloat(String(item.price).replace(/,/g,'').replace('৳','')) * item.quantity), 0);
+
+    const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
+    const [quickViewItem, setQuickViewItem] = useState<any>(null);
+
+    useEffect(() => {
+        const handleOpenQv = (e: any) => setQuickViewItem(e.detail);
+        window.addEventListener('openQuickView', handleOpenQv);
+        return () => window.removeEventListener('openQuickView', handleOpenQv);
+    }, []);
 
     return (
         <AuthContext.Provider value={{ userState, setUserState, showToast }}>
-        <CartContext.Provider value={{ cartItems, setCartItems, addToCart, cartCount }}>
+        <CartContext.Provider value={{ cartItems, setCartItems, addToCart, cartCount, isCartDrawerOpen, setIsCartDrawerOpen }}>
         <CompareContext.Provider value={{ compareItems, addToCompare, removeFromCompare, clearCompare, isInCompare }}>
-            <div className="app-container">
+            <div className="app-container" style={{paddingBottom: '60px'}}>
                 <Navigation cartCount={cartCount} compareCount={compareItems.length} categories={MOCK_CATEGORIES} />
                 <main style={{ minHeight: '60vh' }}>
                     {children}
                 </main>
                 <Footer />
+
+                {/* ─ Global Cart Drawer Overlay ─ */}
+                <div className={`drawer-overlay ${isCartDrawerOpen ? 'visible' : ''}`} onClick={() => setIsCartDrawerOpen(false)}></div>
+                <div className={`cart-drawer ${isCartDrawerOpen ? 'open' : ''}`} style={{position: 'fixed', top: 0, right: 0, width: '100%', maxWidth: '400px', height: '100%', background: 'white', zIndex: 1001, boxShadow: '-5px 0 25px rgba(0,0,0,0.1)', display: 'flex', flexDirection: 'column', transition: 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1)', transform: isCartDrawerOpen ? 'translateX(0)' : 'translateX(100%)'}}>
+                    <div style={{padding: '20px', borderBottom: '1px solid #eee', display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                        <h2 style={{fontSize: '20px', fontWeight: 700}}>Your Cart</h2>
+                        <button onClick={() => setIsCartDrawerOpen(false)} style={{background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#666'}}>&times;</button>
+                    </div>
+                    <div style={{flex: 1, overflowY: 'auto', padding: '20px'}}>
+                        {cartItems.length === 0 ? (
+                            <div style={{textAlign: 'center', padding: '50px 0', color: '#888'}}>
+                                <i className="fas fa-shopping-bag" style={{fontSize: '50px', color: '#eee', marginBottom: '20px'}}></i>
+                                <p>Your cart is empty.</p>
+                            </div>
+                        ) : (
+                            cartItems.map((item, idx) => (
+                                <div key={idx} style={{display: 'flex', gap: '15px', marginBottom: '20px', paddingBottom: '20px', borderBottom: '1px solid #f5f5f5'}}>
+                                    <img src={item.imgUrl || '/images/placeholder.png'} style={{width: '70px', height: '70px', objectFit: 'contain', background: '#f8f9fa', borderRadius: '8px'}} />
+                                    <div style={{flex: 1}}>
+                                        <div style={{fontSize: '13px', fontWeight: 600, color: '#333', lineHeight: 1.4, marginBottom: '5px'}}>{item.title}</div>
+                                        <div style={{color: '#888', fontSize: '13px'}}>Qty: {item.quantity}  <button style={{background:'none', border:'none', color:'#e53935', fontSize:'13px', cursor:'pointer', float:'right'}} onClick={() => setCartItems(cartItems.filter(i => i.id !== item.id))}><i className="fas fa-trash"></i></button></div>
+                                        <div style={{color: '#ff6b00', fontWeight: 700, marginTop: '5px'}}>৳{(parseFloat(String(item.price).replace(/,/g,'').replace('৳','')) * item.quantity).toLocaleString()}</div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                    <div style={{padding: '25px 20px', borderTop: '1px solid #eee', background: '#fafafa'}}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '20px'}}>
+                            <span style={{fontSize: '16px', fontWeight: 600}}>Subtotal:</span>
+                            <span style={{fontSize: '20px', fontWeight: 800, color: '#ff6b00'}}>৳{subtotal.toLocaleString()}</span>
+                        </div>
+                        <div style={{display: 'flex', gap: '10px'}}>
+                            <Link href="/cart" onClick={() => setIsCartDrawerOpen(false)} style={{flex: 1, padding: '14px', textAlign: 'center', border: '1px solid #1B5B97', color: '#1B5B97', borderRadius: '8px', fontWeight: 600, textDecoration: 'none'}}>View Cart</Link>
+                            <Link href="/checkout" onClick={() => setIsCartDrawerOpen(false)} style={{flex: 1, padding: '14px', textAlign: 'center', background: '#ff6b00', color: 'white', borderRadius: '8px', fontWeight: 600, textDecoration: 'none'}}>Checkout</Link>
+                        </div>
+                    </div>
+                </div>
+
+                {/* ─ Quick View Modal ─ */}
+                {quickViewItem && (
+                    <div className="drawer-overlay visible" style={{display:'flex', alignItems:'center', justifyContent:'center', padding:'20px'}}>
+                        <div className="quickview-modal" style={{background: 'white', borderRadius: '24px', maxWidth: '800px', width: '100%', position: 'relative', overflow: 'hidden', padding: '40px', display: 'flex', gap: '30px', boxShadow: '0 25px 50px rgba(0,0,0,0.2)'}}>
+                            <button onClick={() => setQuickViewItem(null)} style={{position: 'absolute', top: '20px', right: '20px', background: '#f5f5f5', border: 'none', width: '36px', height: '36px', borderRadius: '50%', cursor: 'pointer', fontSize: '18px'}}>&times;</button>
+                            <div style={{width: '350px'}}>
+                                <img src={quickViewItem.imgUrl || '/images/placeholder.png'} style={{width: '100%', objectFit: 'contain'}} />
+                            </div>
+                            <div style={{flex: 1}}>
+                                <h1 style={{fontSize: '24px', fontWeight: 700, marginBottom: '10px'}}>{quickViewItem.title}</h1>
+                                <div style={{color: '#ff6b00', fontSize: '26px', fontWeight: 800, marginBottom: '20px'}}>{quickViewItem.price}</div>
+                                <ul style={{color: '#555', lineHeight: 1.8, marginBottom: '30px', paddingLeft: '20px', fontSize: '14px'}}>
+                                    {quickViewItem.features?.map((f:string, i:number) => <li key={i}>{f}</li>)}
+                                </ul>
+                                <button className="btn-add-cart" onClick={() => {addToCart(quickViewItem, 1, false); setQuickViewItem(null);}} style={{width: '100%'}}>Add to Cart</button>
+                                <div style={{textAlign: 'center', marginTop: '15px'}}><Link href={`/product/${quickViewItem.id}`} onClick={() => setQuickViewItem(null)} style={{color: '#1B5B97', fontSize: '14px', fontWeight: 600, textDecoration: 'none'}}>View Full Details &rarr;</Link></div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* ─ iOS Style Bottom Mobile Toolbar ─ */}
+                <div className="bottom-nav d-none-desktop" style={{position: 'fixed', bottom: 0, left: 0, right: 0, background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', display: 'flex', justifyContent: 'space-around', padding: '12px 10px', borderTop: '1px solid #eee', zIndex: 900, boxShadow: '0 -2px 10px rgba(0,0,0,0.05)'}}>
+                    <Link href="/" className="nav-item active" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none', color: '#1B5B97', gap: '4px', fontSize: '11px', fontWeight: 600}}>
+                        <i className="fas fa-home" style={{fontSize: '20px'}}></i> Home
+                    </Link>
+                    <Link href="/pc-builder" className="nav-item" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none', color: '#666', gap: '4px', fontSize: '11px', fontWeight: 600}}>
+                        <i className="fas fa-tools" style={{fontSize: '20px'}}></i> PC Build
+                    </Link>
+                    <a href="#" className="nav-item" onClick={(e) => {e.preventDefault(); setIsCartDrawerOpen(true);}} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none', color: '#666', gap: '4px', fontSize: '11px', fontWeight: 600, position: 'relative'}}>
+                        <i className="fas fa-shopping-bag" style={{fontSize: '20px'}}></i> Cart
+                        {cartCount > 0 && <span style={{position:'absolute', top:'-5px', right:'-5px', background:'#ff6b00', color:'white', fontSize:'10px', padding:'2px 6px', borderRadius:'10px'}}>{cartCount}</span>}
+                    </a>
+                    <Link href="/account" className="nav-item" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none', color: '#666', gap: '4px', fontSize: '11px', fontWeight: 600}}>
+                        <i className="fas fa-user" style={{fontSize: '20px'}}></i> {userState.isLoggedIn ? 'Profile' : 'Account'}
+                    </Link>
+                </div>
 
                 {toastData && <Toast msg={toastData.msg} type={toastData.type} />}
             </div>
@@ -128,12 +212,16 @@ export const CartContext = React.createContext<{
     cartItems: any[],
     setCartItems: React.Dispatch<React.SetStateAction<any[]>>,
     addToCart: (product: any, qty?: number, forceCheckout?: boolean) => void,
-    cartCount: number
+    cartCount: number,
+    isCartDrawerOpen: boolean,
+    setIsCartDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>
 }>({
     cartItems: [],
     setCartItems: () => {},
     addToCart: () => {},
     cartCount: 0,
+    isCartDrawerOpen: false,
+    setIsCartDrawerOpen: () => {}
 });
 
 // ── Compare Context ───────────────────────────────────────────────────────────
