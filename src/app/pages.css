@@ -2812,7 +2812,7 @@ body {
 }
 
 .site-logo img {
-  height: 80px;
+  height: 160px;
   width: auto;
   object-fit: contain;
   transition: all 0.2s ease;
@@ -2825,7 +2825,7 @@ body {
 
 @media (max-width: 768px) {
   .site-logo img {
-    height: 56px;
+    height: 100px;
   }
 }
 
