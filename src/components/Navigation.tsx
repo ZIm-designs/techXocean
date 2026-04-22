@@ -59,13 +59,13 @@ export const MainHeader = ({ cartCount, compareCount, onMenuToggle }: { cartCoun
                 <div style={{marginRight: '20px'}}>
                     <Link href="/" className="site-logo">
                         <picture>
-                            <source media="(max-width: 768px)" srcSet="/images/logo/logo-icon.png" />
+                            <source media="(max-width: 768px)" srcSet="/img/website-logo.png" />
                             <img 
-                                src="/images/logo/logo-full.png" 
-                                alt="Tech X Ocean" 
+                                src="/img/website-logo.png" 
+                                alt="Tech X Ocean"
+                                style={{ height: '52px', width: 'auto', objectFit: 'contain' }}
                                 onError={(e: any) => {
                                     e.target.onerror = null;
-                                    e.target.src = "/images/logo/fallback-logo.png";
                                     e.target.outerHTML = '<span class="logo-text-fallback">Tech X Ocean</span>';
                                 }}
                             />
