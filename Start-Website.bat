@@ -20,5 +20,9 @@ if not exist "node_modules" (
 echo  Starting development server...
 echo  Website will open at: http://localhost:3000
 echo.
+
+:: Open browser after 3 seconds
+start "" /b cmd /c "timeout /t 3 /nobreak >nul && start http://localhost:3000"
+
 call npm run dev
 pause
