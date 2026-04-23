@@ -156,8 +156,20 @@
 
 .category-icon {
     font-size: 32px;
-    color: var(--secondary-color);
+    background: #db4b27;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 12px;
+}
+
+.category-icon i,
+.category-icon svg {
+    color: white;
+    fill: white;
 }
 
 .category-card h4 {
@@ -172,11 +184,6 @@
     padding: 40px 0;
 }
 
-.products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px;
-}
 
 .product-card {
     background: rgba(255, 255, 255, 0.8);
@@ -428,9 +435,6 @@
     }
 }
 @media (max-width: 576px) {
-    .products-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    }
     .hero-side-banners {
         flex-direction: column;
     }

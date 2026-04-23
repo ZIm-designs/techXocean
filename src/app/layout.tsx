@@ -5,6 +5,7 @@ import "./header.css";
 import "./home.css";
 import "./pages.css";
 import ClientApplication from "@/components/ClientApplication";
+import FloatingIconsBackground from "@/components/FloatingIconsBackground";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,6 +27,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="180x180" href="/img/website-logo.png?v=3" />
       </head>
       <body className={inter.className}>
+        <FloatingIconsBackground />
         <ClientApplication>
           {children}
         </ClientApplication>
