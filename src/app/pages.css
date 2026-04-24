@@ -3394,3 +3394,397 @@ body {
     text-align: center;
   }
 }
+
+/* ============================================================
+   COMPACT BUILDER LAYOUT (StarTech-Style)
+   ============================================================ */
+
+.pc-builder-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f5f6fa;
+}
+
+/* Header */
+.builder-header-compact {
+  padding: 16px 20px;
+  background: white;
+  border-bottom: 1px solid #eee;
+}
+
+.builder-header-compact h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 4px 0;
+}
+
+.builder-header-compact .subtitle {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+/* Core container */
+.core-components-container {
+  margin: 16px 16px 8px;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  background: white;
+  overflow: hidden;
+}
+
+/* Compact Row */
+.component-row-compact {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  background: white;
+  transition: background 0.15s;
+  min-height: 58px;
+  gap: 10px;
+}
+
+.component-row-compact:last-child {
+  border-bottom: none;
+}
+
+.component-row-compact:hover {
+  background: #fafbfc;
+}
+
+/* Icon column */
+.crc-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #f0f4ff;
+  border-radius: 8px;
+}
+
+/* Name + badge column */
+.component-info-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 0 0 120px;
+  min-width: 100px;
+}
+
+.component-name-compact {
+  font-size: 13px;
+  font-weight: 600;
+  color: #222;
+  line-height: 1.2;
+}
+
+.req-badge {
+  font-size: 10px;
+  color: #db4b27;
+  font-weight: 500;
+}
+
+.opt-badge {
+  font-size: 10px;
+  color: #999;
+  font-weight: 400;
+}
+
+/* Status column */
+.component-status-compact {
+  flex: 1;
+  font-size: 12px;
+  color: #bbb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.component-status-compact.selected {
+  color: #444;
+  font-weight: 500;
+}
+
+/* Price column */
+.component-price-compact {
+  flex: 0 0 80px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 700;
+  color: #db4b27;
+  white-space: nowrap;
+}
+
+/* Choose button */
+.choose-btn-compact {
+  background: transparent;
+  border: 1.5px solid #1B5B97;
+  color: #1B5B97;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  min-width: 68px;
+}
+
+.choose-btn-compact:hover {
+  background: #1B5B97;
+  color: white;
+}
+
+.choose-btn-compact.selected {
+  background: #1B5B97;
+  color: white;
+}
+
+/* Remove button */
+.crc-remove-btn {
+  background: none;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.crc-remove-btn:hover {
+  color: #e53935;
+  background: #ffeaea;
+}
+
+/* Peripherals section */
+.peripherals-section {
+  margin: 0 16px 16px;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  background: white;
+  overflow: hidden;
+}
+
+.peripherals-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  background: #f8f9fa;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  user-select: none;
+  transition: background 0.15s;
+}
+
+.peripherals-header:hover {
+  background: #f0f1f3;
+}
+
+.peripherals-header i {
+  color: #db4b27;
+  font-size: 12px;
+}
+
+.peripherals-count {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 400;
+  color: #888;
+}
+
+.peripherals-list {
+  overflow: hidden;
+}
+
+.peripherals-list .component-row-compact:last-child {
+  border-bottom: none;
+}
+
+/* Summary bar */
+.summary-bar-compact {
+  position: sticky;
+  bottom: 65px; /* Above mobile bottom nav */
+  background: white;
+  border-top: 2px solid #eee;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  box-shadow: 0 -4px 15px rgba(0,0,0,0.06);
+  z-index: 50;
+  margin-top: auto;
+}
+
+.summary-stats {
+  display: flex;
+  gap: 20px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #888;
+}
+
+.stat-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #db4b27;
+}
+
+.complete-build-btn {
+  background: #db4b27;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.complete-build-btn:hover:not(:disabled) {
+  background: #c13e1c;
+  transform: translateY(-1px);
+}
+
+.complete-build-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sr-btn-secondary {
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  color: #555;
+  padding: 10px 16px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.sr-btn-secondary:hover {
+  background: #eee;
+}
+
+/* ── Mobile overrides ── */
+@media (max-width: 768px) {
+  .core-components-container {
+    margin: 12px 10px 6px;
+  }
+  .peripherals-section {
+    margin: 0 10px 10px;
+  }
+  .component-row-compact {
+    padding: 8px 10px;
+    gap: 7px;
+    min-height: 52px;
+  }
+  .component-info-compact {
+    flex: 0 0 90px;
+    min-width: 80px;
+  }
+  .component-name-compact {
+    font-size: 12px;
+  }
+  .component-status-compact {
+    max-width: 100px;
+    font-size: 11px;
+  }
+  .component-price-compact {
+    flex: 0 0 65px;
+    font-size: 12px;
+  }
+  .choose-btn-compact {
+    padding: 4px 10px;
+    font-size: 11px;
+    min-width: 58px;
+  }
+  .summary-bar-compact {
+    bottom: 65px;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  .summary-stats {
+    gap: 12px;
+  }
+  .stat-value {
+    font-size: 13px;
+  }
+  .complete-build-btn {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+  .builder-header-compact {
+    padding: 12px 14px;
+  }
+  .builder-header-compact h1 {
+    font-size: 18px;
+  }
+}
+
+/* ── OVERRIDE: Larger compact rows ── */
+.component-row-compact {
+  min-height: 72px !important;
+  padding: 14px 16px !important;
+}
+
+.crc-icon {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 10px !important;
+  background: #fff3ef !important;
+}
+
+.component-info-compact {
+  flex: 0 0 130px !important;
+  min-width: 110px !important;
+}
+
+.component-name-compact {
+  font-size: 14px !important;
+}
+
+.component-status-compact {
+  font-size: 13px !important;
+}
+
+.component-price-compact {
+  font-size: 14px !important;
+}
+
+@media (max-width: 768px) {
+  .component-row-compact {
+    min-height: 64px !important;
+    padding: 11px 12px !important;
+  }
+  .crc-icon {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .component-name-compact {
+    font-size: 13px !important;
+  }
+}

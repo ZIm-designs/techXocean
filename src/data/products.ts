@@ -134,5 +134,14 @@ export const MOCK_CCTV_COMPONENTS = {
     powerSupply: [
         { id: 'cctv_ps_1', title: '12V 5A CCTV Power Supply Adapter',            specs: '12V DC | 5A | 60W | Single Output',                  price: 450,   imgIcon: 'fa-plug' },
         { id: 'cctv_ps_2', title: '12V 10A 9 Channel Central Power Supply Box',  specs: '12V DC | 10A | 9 Channel | Metal Housing',           price: 1500,  imgIcon: 'fa-plug' }
+    ],
+    monitor: [
+        { id: 'cctv_mon_1', title: 'Samsung 22" Full HD CCTV Monitor',           specs: '22" | 1920x1080 | HDMI | VGA | VESA Mount',          price: 9500,  imgIcon: 'fa-tv' },
+        { id: 'cctv_mon_2', title: 'LG 24" Full HD Security Monitor',            specs: '24" | 1920x1080 | HDMI | DisplayPort | VESA',        price: 14000, imgIcon: 'fa-tv' },
+        { id: 'cctv_mon_3', title: 'Dahua LM19-L200 19" CCTV Monitor',          specs: '19" | 1366x768 | HDMI | VGA | BNC Input',            price: 7500,  imgIcon: 'fa-tv' }
+    ],
+    installKit: [
+        { id: 'cctv_kit_1', title: 'Basic CCTV Installation Kit',                specs: 'Wall Mounts, Screws, Cable Clips, Junction Box',      price: 800,   imgIcon: 'fa-toolbox' },
+        { id: 'cctv_kit_2', title: 'Professional CCTV Installation Kit',         specs: 'Heavy Duty Mounts, Conduit, Connectors, Full Tools',  price: 2000,  imgIcon: 'fa-toolbox' }
     ]
 };

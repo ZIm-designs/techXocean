@@ -182,22 +182,7 @@ export default function ClientApplication({ children }: ClientApplicationProps) 
                     </div>
                 )}
 
-                {/* ─ iOS Style Bottom Mobile Toolbar ─ */}
-                <div className="bottom-nav d-none-desktop" style={{position: 'fixed', bottom: 0, left: 0, right: 0, background: 'rgba(255,255,255,0.95)', backdropFilter: 'blur(10px)', display: 'flex', justifyContent: 'space-around', padding: '12px 10px', borderTop: '1px solid #eee', zIndex: 900, boxShadow: '0 -2px 10px rgba(0,0,0,0.05)'}}>
-                    <Link href="/" className="nav-item active" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none', color: '#1B5B97', gap: '4px', fontSize: '11px', fontWeight: 600}}>
-                        <i className="fas fa-home" style={{fontSize: '20px'}}></i> Home
-                    </Link>
-                    <Link href="/pc-builder" className="nav-item" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none', color: '#666', gap: '4px', fontSize: '11px', fontWeight: 600}}>
-                        <i className="fas fa-tools" style={{fontSize: '20px'}}></i> PC Build
-                    </Link>
-                    <a href="#" className="nav-item" onClick={(e) => {e.preventDefault(); setIsCartDrawerOpen(true);}} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none', color: '#666', gap: '4px', fontSize: '11px', fontWeight: 600, position: 'relative'}}>
-                        <i className="fas fa-shopping-bag" style={{fontSize: '20px'}}></i> Cart
-                        {cartCount > 0 && <span style={{position:'absolute', top:'-5px', right:'-5px', background:'#ff6b00', color:'white', fontSize:'10px', padding:'2px 6px', borderRadius:'10px'}}>{cartCount}</span>}
-                    </a>
-                    <Link href="/account" className="nav-item" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', textDecoration: 'none', color: '#666', gap: '4px', fontSize: '11px', fontWeight: 600}}>
-                        <i className="fas fa-user" style={{fontSize: '20px'}}></i> {userState.isLoggedIn ? 'Profile' : 'Account'}
-                    </Link>
-                </div>
+
 
                 {toastData && <Toast msg={toastData.msg} type={toastData.type} />}
             </div>

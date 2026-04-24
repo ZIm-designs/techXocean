@@ -2,7 +2,7 @@
 
 import React, { useState, useContext, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { AuthContext, CartContext } from './ClientApplication';
 import { FaDesktop, FaVideo } from 'react-icons/fa';
 import { MOCK_PRODUCTS } from '@/data/products';
@@ -52,10 +52,46 @@ export const MainHeader = ({ cartCount, compareCount, onMenuToggle }: { cartCoun
 
     return (
         <header className="main-header" id="mainHeader">
-            <div className="container main-header-inner">
-                <button className="mobile-menu-toggler" onClick={onMenuToggle}>
-                    <i className="fas fa-bars"></i>
+            {/* Mobile Header */}
+            <div className="mobile-header-container">
+              <div className="mobile-header-row">
+                <button className="hamburger-menu" onClick={onMenuToggle}>
+                  <i className="fas fa-bars"></i>
                 </button>
+                
+                <div className="mobile-logo-wrapper">
+                  <Link href="/">
+                    <img 
+                      src="/img/main website logo.png" 
+                      alt="Tech X Ocean" 
+                      className="mobile-logo"
+                    />
+                  </Link>
+                </div>
+                
+                <button className="mobile-cart-icon" onClick={() => setIsCartDrawerOpen(true)}>
+                  <i className="fas fa-shopping-cart"></i>
+                  <span className="cart-badge">{cartCount}</span>
+                </button>
+              </div>
+              
+              <div className="mobile-search-row">
+                <div className="search-wrapper">
+                  <i className="fas fa-search search-icon-left"></i>
+                  <input 
+                    type="text" 
+                    placeholder="Search for Products..." 
+                    className="mobile-search-input"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onFocus={() => setShowSearch(true)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop Header */}
+            <div className="container main-header-inner desktop-header">
                 <div style={{marginRight: '20px'}}>
                     <Link href="/" className="logo-link">
                         <img 
@@ -227,6 +263,101 @@ export const MegaMenu = ({ isMobileMenuOpen, onCloseMobileMenu, categories }: { 
     );
 };
 
+export const MobileBottomNav = () => {
+    const pathname = usePathname();
+    const isActive = (path: string) => pathname === path ? 'active' : '';
+    const [showBuilderModal, setShowBuilderModal] = useState(false);
+    
+    return (
+        <>
+            <div className="mobile-bottom-nav">
+              <Link href="/" className={`nav-item ${isActive('/')}`}>
+                <i className="fas fa-home"></i>
+                <span>Home</span>
+              </Link>
+              
+              <button 
+                className={`nav-item builder-trigger ${pathname?.includes('builder') ? 'active' : ''}`}
+                onClick={() => setShowBuilderModal(true)}
+              >
+                <i className="fas fa-tools"></i>
+                <span>System Builder</span>
+              </button>
+              
+              <Link href="/cart" className={`nav-item ${isActive('/cart')}`}>
+                <i className="fas fa-shopping-cart"></i>
+                <span>Cart</span>
+              </Link>
+              
+              <Link href="/account" className={`nav-item ${isActive('/account')}`}>
+                <i className="fas fa-user"></i>
+                <span>Profile</span>
+              </Link>
+            </div>
+
+            {showBuilderModal && (
+              <div className="builder-modal-overlay" onClick={() => setShowBuilderModal(false)}>
+                <div className="builder-modal" onClick={(e) => e.stopPropagation()}>
+                  <div className="builder-modal-header">
+                    <h3>System Builder</h3>
+                    <button onClick={() => setShowBuilderModal(false)}>✕</button>
+                  </div>
+                  <div className="builder-modal-options">
+                    <Link href="/pc-builder" className="builder-option" onClick={() => setShowBuilderModal(false)}>
+                      <div className="builder-icon">🖥️</div>
+                      <div className="builder-info">
+                        <h4>PC Builder</h4>
+                        <p>Build your custom computer</p>
+                      </div>
+                      <i className="fas fa-chevron-right"></i>
+                    </Link>
+                    <Link href="/cctv-builder" className="builder-option" onClick={() => setShowBuilderModal(false)}>
+                      <div className="builder-icon">📹</div>
+                      <div className="builder-info">
+                        <h4>CCTV Quotation</h4>
+                        <p>Design your security system</p>
+                      </div>
+                      <i className="fas fa-chevron-right"></i>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+        </>
+    );
+};
+
+export const MobileDrawer = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+    return (
+        <>
+            <div className={`drawer-overlay ${isOpen ? 'visible' : ''}`} onClick={onClose}></div>
+            <div className={`mobile-drawer ${isOpen ? 'open' : ''}`}>
+                <div className="drawer-header">
+                    <Link href="/">
+                        <img src="/img/main website logo.png" alt="Tech X Ocean" style={{ height: '35px' }} />
+                    </Link>
+                    <button className="drawer-close" onClick={onClose}>
+                        <i className="fas fa-times"></i>
+                    </button>
+                </div>
+                <ul className="drawer-menu">
+                    <li><Link href="/account"><i className="fas fa-user-circle"></i> Login / Register</Link></li>
+                    <li><Link href="/"><i className="fas fa-home"></i> Home</Link></li>
+                    <li><Link href="/cart"><i className="fas fa-shopping-cart"></i> Cart</Link></li>
+                    <li><Link href="/pc-builder"><i className="fas fa-tools"></i> PC Builder</Link></li>
+                    <li><Link href="/cctv-builder"><i className="fas fa-video"></i> CCTV Builder</Link></li>
+                    <li><Link href="/categories"><i className="fas fa-box"></i> Products</Link></li>
+                    <li><Link href="/offers"><i className="fas fa-tags"></i> Offers</Link></li>
+                    <li><Link href="/contact"><i className="fas fa-phone"></i> Contact Us</Link></li>
+                </ul>
+                <div className="drawer-footer">
+                    <i className="fas fa-phone-alt"></i> Call 16793 (09AM-08PM)
+                </div>
+            </div>
+        </>
+    );
+};
+
 export default function Navigation({ cartCount, compareCount, categories }: NavigationProps) {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -234,6 +365,8 @@ export default function Navigation({ cartCount, compareCount, categories }: Navi
         <>
             <MainHeader cartCount={cartCount} compareCount={compareCount} onMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
             <MegaMenu isMobileMenuOpen={isMobileMenuOpen} onCloseMobileMenu={() => setIsMobileMenuOpen(false)} categories={categories} />
+            <MobileDrawer isOpen={isMobileMenuOpen} onClose={() => setIsMobileMenuOpen(false)} />
+            <MobileBottomNav />
         </>
     );
 }

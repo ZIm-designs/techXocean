@@ -12,12 +12,34 @@ export default function Home() {
     const { addToCart } = useContext(CartContext);
 
     return (
-        <>
+        <div className="home-layout-wrapper">
             <HeroBanner />
             <FeaturesBar />
             <CategoryList categories={MOCK_CATEGORIES} />
             
-            <section className="products-section container">
+            <div className="mobile-products-section">
+              <div className="section-header" style={{display: 'flex', justifyContent: 'space-between', padding: '16px', alignItems: 'center'}}>
+                <h3 className="section-title" style={{margin: 0}}>Featured Products</h3>
+                <a href="#" className="view-all" style={{color: '#1B5B97', fontSize: '13px', fontWeight: 600, textDecoration: 'none'}}>View All →</a>
+              </div>
+              
+              <div className="products-horizontal-scroll">
+                {MOCK_PRODUCTS.slice(0, 6).map(product => (
+                  <div className="mobile-product-card" key={product.id}>
+                    {product.badge && <div className="product-badge flash-sale" style={{background: product.badgeColor || '#db4b27'}}>{product.badge}</div>}
+                    <img src={product.imgUrl} alt={product.title} />
+                    <h4 className="product-title">{product.title}</h4>
+                    <div className="product-price">
+                      <span className="current">{product.price}</span>
+                      {product.oldPrice && <span className="old">{product.oldPrice}</span>}
+                    </div>
+                    <button className="add-to-cart" onClick={(e) => { e.preventDefault(); addToCart(product); }}>Add to Cart</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <section className="products-section container desktop-only">
                 <BrandSectionTitle 
                     title="FEATURED PRODUCTS" 
                     subtitle="Check & get your desired product"
@@ -29,7 +51,9 @@ export default function Home() {
                 </div>
             </section>
 
-            <LatestBlogs blogs={[]} />
-        </>
+            <div className="desktop-only">
+                <LatestBlogs blogs={[]} />
+            </div>
+        </div>
     );
 }
